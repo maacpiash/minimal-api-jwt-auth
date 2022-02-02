@@ -273,3 +273,7 @@ __pycache__/
 # tools/
 
 # End of https://www.toptal.com/developers/gitignore/api/aspnetcore
+
+# SQLite shared memory file and write-ahead log file
+*.db-shm
+*.db-wal
