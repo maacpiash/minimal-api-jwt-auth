@@ -21,9 +21,20 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
+
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+	optionsBuilder.UseSqlite("Data Source=app.db")
+		.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+		.EnableDetailedErrors()
+		.ConfigureWarnings(b => b.Log(ConnectionOpened, CommandExecuted, ConnectionClosed)));
+
+builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
 
