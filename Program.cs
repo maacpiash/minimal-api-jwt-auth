@@ -34,6 +34,8 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 		.EnableDetailedErrors()
 		.ConfigureWarnings(b => b.Log(ConnectionOpened, CommandExecuted, ConnectionClosed)));
 
+builder.Services.AddSingleton<TokenGenerator>();
+
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 var app = builder.Build();
@@ -42,5 +44,7 @@ app.UseSwagger();
 app.UseSwaggerUI();
 
 app.MapGet("/", () => "Hello World!");
+
+app.MapPost("/login", (TokenGenerator tokenGen, UserDTO user) => tokenGen.GenerateAccessToken(user.ToEntity()));
 
 app.Run();
