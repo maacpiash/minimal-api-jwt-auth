@@ -43,12 +43,6 @@ public class TokenGenerator
 
 	public string GenerateAccessToken(User user)
 	{
-
-		Console.WriteLine(user.Id);
-		Console.WriteLine(user.UserName);
-		Console.WriteLine(user.FullName);
-		Console.WriteLine(user.Email);
-
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
 			Subject = new ClaimsIdentity(
