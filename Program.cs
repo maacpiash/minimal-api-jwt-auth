@@ -34,6 +34,8 @@ builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 		.EnableDetailedErrors()
 		.ConfigureWarnings(b => b.Log(ConnectionOpened, CommandExecuted, ConnectionClosed)));
 
+builder.Services.AddDbContext<TokenRepository>(optionsBuilder => optionsBuilder.UseInMemoryDatabase("Tokens"));
+
 builder.Services.AddSingleton<TokenGenerator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
