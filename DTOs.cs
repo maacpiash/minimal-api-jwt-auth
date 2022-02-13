@@ -22,22 +22,34 @@
  * SOFTWARE.
  */
 using System.ComponentModel.DataAnnotations;
-using Microsoft.AspNetCore.Identity;
 
-public class User : IdentityUser<Guid>
+public class UserDTO
 {
+	public string Id { get; set; }
+
+	[Required]
+	public string UserName { get; set; }
+
+	[Required]
 	public string FullName { get; set; }
-	public int Age { get; set; }
-	public string Address { get; set; }
-	public HashSet<Todo> Todos { get; set; }
-}
 
-public class Todo
-{
-	[Key]
-	public Guid Id { get; set; }
-	public string Title { get; set; }
-	public bool IsDone { get; set; } = false;
-	public Guid AssignedToId { get; set; }
-	public User AssignedTo { get; set; }
+	[Required]
+	public string Email { get; set; }
+
+	public int Age { get; set; }
+
+	public string Address { get; set; }
+
+	public User ToEntity()
+	{
+		return new User
+		{
+			Id = Guid.TryParse(Id, out Guid UserId) ? UserId : Guid.NewGuid(),
+			UserName = UserName,
+			FullName = FullName,
+			Email = Email,
+			Age = Age,
+			Address = Address
+		};
+	}
 }
