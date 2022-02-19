@@ -27,14 +27,12 @@ using Microsoft.IdentityModel.Tokens;
 
 public class TokenValidator
 {
-	private readonly byte[] _accessTokenSecret;
 	private readonly byte[] _refreshTokenSecret;
 	private readonly string _issuer;
 	private readonly string _audience;
 
 	public TokenValidator(IConfiguration config)
 	{
-		_accessTokenSecret = Encoding.ASCII.GetBytes(config.GetValue<string>("Jwt:AccessTokenSecret"));
 		_refreshTokenSecret = Encoding.ASCII.GetBytes(config.GetValue<string>("Jwt:RefreshTokenSecret"));
 		_issuer = config.GetValue<string>("Jwt:Issuer");
 		_audience = config.GetValue<string>("Jwt:Audience");
