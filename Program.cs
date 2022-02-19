@@ -30,6 +30,7 @@ using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
 var builder = WebApplication.CreateBuilder(args);
 
 var accessTokenSecret = builder.Configuration["Jwt:AccessTokenSecret"];
+var isProduction = builder.Environment.IsProduction();
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
@@ -46,6 +47,21 @@ builder.Services.AddSingleton<TokenGenerator>();
 builder.Services.AddSingleton<TokenValidator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
+
+builder.Services.AddIdentityCore<User>(options =>
+{
+	options.User.RequireUniqueEmail = true;
+	options.Password.RequireDigit = isProduction;
+	options.Password.RequireLowercase = isProduction;
+	options.Password.RequireNonAlphanumeric = isProduction;
+	options.Password.RequireUppercase = isProduction;
+	if (isProduction)
+	{
+		options.Password.RequiredLength = 8;
+		options.Password.RequiredUniqueChars = 3;
+	}
+})
+.AddEntityFrameworkStores<AppDbContext>();
 
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
