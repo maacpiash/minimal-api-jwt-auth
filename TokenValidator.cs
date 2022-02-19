@@ -60,7 +60,7 @@ public class TokenValidator
 			var jwt = (JwtSecurityToken)token;
 			return new Guid(jwt.Id);
 		}
-		catch (Exception e)
+		catch (Exception)
 		{
 			return Guid.Empty;
 		}
