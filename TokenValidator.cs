@@ -40,7 +40,7 @@ public class TokenValidator
 		_audience = config.GetValue<string>("Jwt:Audience");
 	}
 
-	public Guid ValidateRefreshToken(string refreshToken)
+	public bool TryValidate(string refreshToken, out Guid tokenId)
 	{
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var tokenValidationParams = new TokenValidationParameters
@@ -58,11 +58,14 @@ public class TokenValidator
 		{
 			tokenHandler.ValidateToken(refreshToken, tokenValidationParams, out SecurityToken token);
 			var jwt = (JwtSecurityToken)token;
-			return new Guid(jwt.Id);
+			var valid = Guid.TryParse(jwt.Id, out var id);
+			tokenId = id;
+			return valid;
 		}
 		catch (Exception)
 		{
-			return Guid.Empty;
+			tokenId = default;
+			return false;
 		}
 	}
 }
