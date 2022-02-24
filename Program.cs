@@ -25,6 +25,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.OpenApi.Models;
 using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -33,7 +34,33 @@ var accessTokenSecret = builder.Configuration["Jwt:AccessTokenSecret"];
 var isProduction = builder.Environment.IsProduction();
 
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+builder.Services.AddSwaggerGen(options =>
+{
+	options.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
+	{
+		Name = "Authorization",
+		Type = SecuritySchemeType.ApiKey,
+		In = ParameterLocation.Header,
+		Scheme = "Bearer",
+		BearerFormat = "JWT",
+		Description = "JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
+	});
+
+	options.AddSecurityRequirement(new OpenApiSecurityRequirement
+	{
+		{
+			new OpenApiSecurityScheme
+			{
+				Reference = new OpenApiReference
+				{
+					Type = ReferenceType.SecurityScheme,
+					Id = "Bearer"
+				}
+			},
+			new string[] {}
+		}
+	});
+});
 
 builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
 	optionsBuilder.UseSqlite("Data Source=app.db")
