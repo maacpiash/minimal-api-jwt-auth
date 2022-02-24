@@ -94,14 +94,4 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
-app.MapGet("/", () => "Hello World!");
-
-app.MapPost("/login", (TokenGenerator tokenGen, UserDTO user) => tokenGen.GenerateAccessToken(user.ToEntity()));
-
-app.MapGet("/validate", (string jwt, TokenValidator refreshToken) =>
-{
-	var tokenIsValid = refreshToken.TryValidate(jwt, out var id);
-	return tokenIsValid ? Results.Ok(id) : Results.BadRequest();
-});
-
 app.Run();
