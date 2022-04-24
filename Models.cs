@@ -30,6 +30,17 @@ public class User : IdentityUser<Guid>
 	public int Age { get; set; }
 	public string Address { get; set; }
 	public HashSet<Todo> Todos { get; set; }
+
+	public User() { }
+
+	public User(UserCreateDTO dto)
+	{
+		FullName = dto.FullName;
+		Email = dto.Email;
+		UserName = dto.Username;
+		Age = dto.Age;
+		Address = dto.Address;
+	}
 }
 
 public class Todo
