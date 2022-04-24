@@ -121,4 +121,6 @@ app.UseSwaggerUI();
 app.UseAuthentication();
 app.UseAuthorization();
 
+app.MapPost("signup", Users.SignUpAsync);
+
 app.Run();
