@@ -26,12 +26,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http.Json;
+using System.Text.Json.Serialization;
 using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
 
 var builder = WebApplication.CreateBuilder(args);
 
 var accessTokenSecret = builder.Configuration["Jwt:AccessTokenSecret"];
 var isProduction = builder.Environment.IsProduction();
+
+builder.Services.Configure<JsonOptions>(options =>
+	options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
