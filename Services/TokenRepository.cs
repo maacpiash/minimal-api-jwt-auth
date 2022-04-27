@@ -21,11 +21,24 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
+using System.ComponentModel.DataAnnotations;
 using Microsoft.EntityFrameworkCore;
 
 public class TokenRepository : DbContext
 {
-	public DbSet<string> Tokens { get; set; }
+	public DbSet<Token> Tokens { get; set; }
 
 	public TokenRepository(DbContextOptions<TokenRepository> options) : base(options) { }
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Token>().HasIndex(b => b.UserId);
+	}
+}
+
+public record Token
+{
+	[Key]
+	public Guid Id { get; init; }
+	public Guid UserId { get; init; }
 }
