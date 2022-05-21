@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace MinimalJWTAuth.Migrations
+namespace MinimalAPIJWTAuth.Migrations
 {
     [DbContext(typeof(AppDbContext))]
     [Migration("20220202011013_InitialCreate")]

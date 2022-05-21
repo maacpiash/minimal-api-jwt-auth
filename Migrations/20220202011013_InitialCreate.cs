@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace MinimalJWTAuth.Migrations
+namespace MinimalAPIJWTAuth.Migrations
 {
 	public partial class InitialCreate : Migration
 	{
