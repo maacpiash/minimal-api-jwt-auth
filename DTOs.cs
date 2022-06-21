@@ -38,6 +38,9 @@ public class UserDTO
 
 	public int Age { get; set; }
 
+	[Required]
+	public string Role { get; set; }
+
 	public string Address { get; set; }
 
 	public User ToEntity()
@@ -49,6 +52,7 @@ public class UserDTO
 			FullName = FullName,
 			Email = Email,
 			Age = Age,
+			Role = Role,
 			Address = Address
 		};
 	}
@@ -73,5 +77,9 @@ public class UserCreateDTO
 
 	public string Username { get; set; }
 	public int Age { get; set; }
+
+	[Required]
+	public string Role { get; set; }
+
 	public string Address { get; set; }
 }

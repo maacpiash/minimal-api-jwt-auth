@@ -53,6 +53,7 @@ public class TokenGenerator
 					new Claim(ClaimTypes.NameIdentifier, user.UserName),
 					new Claim(ClaimTypes.Name, user.FullName),
 					new Claim(ClaimTypes.Email, user.Email),
+					new Claim(ClaimTypes.Role, user.Role),
 				}
 			),
 			Expires = DateTime.UtcNow.AddMinutes(15),
