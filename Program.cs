@@ -127,5 +127,6 @@ app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapPost("signup", Users.SignUpAsync);
+app.MapPost("signin", Users.SignInAsync);
 
 app.Run();

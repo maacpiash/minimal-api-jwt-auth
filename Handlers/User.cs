@@ -22,6 +22,7 @@
  * SOFTWARE.
  */
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using MiniValidation;
 using static Microsoft.AspNetCore.Http.Results;
 
@@ -49,5 +50,25 @@ public static class Users
 		if (!result.Succeeded) return BadRequest(result.Errors);
 
 		return Created($"/users/{newser.Id}", newser);
+	}
+
+	internal static async Task<IResult> SignInAsync
+	(
+		UserManager<User> users,
+		TokenGenerator tokens,
+		UserLoginDTO credentials
+	)
+	{
+		if (credentials is null) return BadRequest();
+		if (!MiniValidator.TryValidate(credentials, out var errors)) return BadRequest(errors);
+
+		var user = await users.Users.FirstOrDefaultAsync(u => u.Email == credentials.Email);
+		if (user is null) return NotFound("User with this email address not found.");
+
+		var result = await users.CheckPasswordAsync(user, credentials.Password);
+		if (!result) return BadRequest("Incorrect password.");
+
+		var jwt = tokens.GenerateAccessToken(user);
+		return Ok(jwt);
 	}
 }
