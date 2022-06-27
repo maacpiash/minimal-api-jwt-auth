@@ -62,7 +62,10 @@ public static class Users
 		if (credentials is null) return BadRequest();
 		if (!MiniValidator.TryValidate(credentials, out var errors)) return BadRequest(errors);
 
-		var user = await users.Users.FirstOrDefaultAsync(u => u.Email == credentials.Email);
+		var isUsingEmailAddress = EmailAddressValidator.TryValidate(credentials.Login, out var _);
+		var user = isUsingEmailAddress
+			? await users.FindByEmailAsync(credentials.Login)
+			: await users.FindByNameAsync(credentials.Login);
 		if (user is null) return NotFound("User with this email address not found.");
 
 		var result = await users.CheckPasswordAsync(user, credentials.Password);
