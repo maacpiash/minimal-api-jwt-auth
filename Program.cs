@@ -128,5 +128,6 @@ app.UseAuthorization();
 
 app.MapPost("signup", Users.SignUpAsync);
 app.MapPost("signin", Users.SignInAsync);
+app.MapPost("refresh", Auth.RefreshTokenAsync);
 
 app.Run();
