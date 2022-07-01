@@ -56,7 +56,9 @@ public static class Users
 	(
 		UserManager<User> users,
 		TokenGenerator tokens,
-		UserLoginDTO credentials
+		TokenRepository repository,
+		UserLoginDTO credentials,
+		HttpResponse response
 	)
 	{
 		if (credentials is null) return BadRequest();
@@ -71,7 +73,22 @@ public static class Users
 		var result = await users.CheckPasswordAsync(user, credentials.Password);
 		if (!result) return BadRequest("Incorrect password.");
 
-		var jwt = tokens.GenerateAccessToken(user);
-		return Ok(jwt);
+		var accessToken = tokens.GenerateAccessToken(user);
+		var (refreshTokenId, refreshToken) = tokens.GenerateRefreshToken();
+
+		await repository.Tokens.AddAsync(new Token { Id = refreshTokenId, UserId = user.Id });
+		await repository.SaveChangesAsync();
+
+		response.Cookies.Append("refresh_token", refreshToken, new CookieOptions
+		{
+			Expires = DateTime.Now.AddDays(1),
+			HttpOnly = true,
+			IsEssential = true,
+			MaxAge = new TimeSpan(1, 0, 0, 0),
+			Secure = true,
+			SameSite = SameSiteMode.Strict
+		});
+
+		return Ok(accessToken);
 	}
 }
