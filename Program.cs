@@ -36,7 +36,10 @@ var accessTokenSecret = builder.Configuration["Jwt:AccessTokenSecret"];
 var isProduction = builder.Environment.IsProduction();
 
 builder.Services.Configure<JsonOptions>(options =>
-	options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
+{
+	options.SerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+	options.SerializerOptions.Converters.Add(new UserConverter());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(options =>
