@@ -69,4 +69,30 @@ public static class Auth
 
 		return Ok(accessToken);
 	}
+
+	internal static async Task<IResult> SignOutAsync
+	(
+		HttpRequest request,
+		HttpResponse response,
+		TokenRepository repository,
+		TokenValidator validator
+	)
+	{
+		var refreshToken = request.Cookies["refresh_token"];
+
+		if (string.IsNullOrWhiteSpace(refreshToken))
+			return BadRequest("Please include a refresh token in the request.");
+
+		var tokenIsValid = validator.TryValidate(refreshToken, out var tokenId);
+		if (!tokenIsValid) return BadRequest("Invalid refresh token.");
+
+		var token = await repository.Tokens.Where(token => token.Id == tokenId).FirstOrDefaultAsync();
+		if (token is null) return BadRequest("Refresh token not found.");
+
+		repository.Tokens.Remove(token);
+		await repository.SaveChangesAsync();
+
+		response.Cookies.Delete("refresh_token");
+		return NoContent();
+	}
 }
