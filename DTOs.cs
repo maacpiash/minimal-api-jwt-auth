@@ -23,7 +23,7 @@
  */
 using System.ComponentModel.DataAnnotations;
 
-public class UserDTO
+public record UserDTO
 {
 	public string Id { get; set; }
 
@@ -58,7 +58,7 @@ public class UserDTO
 	}
 }
 
-public class UserCreateDTO
+public record UserCreateDTO
 {
 	[Required]
 	[EmailAddress]
@@ -84,7 +84,7 @@ public class UserCreateDTO
 	public string Address { get; set; }
 }
 
-public class UserLoginDTO
+public record UserLoginDTO
 {
 	[Required]
 	public string Login { get; set; }
