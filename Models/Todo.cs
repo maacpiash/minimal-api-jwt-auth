@@ -23,7 +23,7 @@
  */
 using System.ComponentModel.DataAnnotations;
 
-public class Todo
+public record Todo
 {
 	[Key]
 	public Guid Id { get; set; }
