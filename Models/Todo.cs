@@ -31,4 +31,15 @@ public record Todo
 	public bool IsDone { get; set; } = false;
 	public Guid AssignedToId { get; set; }
 	public User AssignedTo { get; set; }
+
+	public Todo() { }
+
+	public Todo(Guid id, string title, bool isDone, Guid assignedToId, User assignedTo)
+	{
+		Id = id;
+		Title = title;
+		IsDone = isDone;
+		AssignedToId = assignedToId;
+		AssignedTo = assignedTo;
+	}
 }

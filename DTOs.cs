@@ -92,3 +92,5 @@ public record UserLoginDTO
 	[Required]
 	public string Password { get; set; }
 }
+
+public record TodoDTO(Guid id, string title, bool isDone, Guid assignedToId);
