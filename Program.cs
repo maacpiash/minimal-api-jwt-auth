@@ -134,4 +134,10 @@ app.MapPost("signin", Users.SignInAsync);
 app.MapPost("refresh", Auth.RefreshTokenAsync);
 app.MapDelete("signout", Auth.SignOutAsync);
 
+app.MapGet("todos", Todos.ReadAllAsync);
+app.MapGet("todos/{id}", Todos.ReadOneAsync);
+app.MapPost("todos", Todos.CreateAsync);
+app.MapPut("todos", Todos.UpdateAsync);
+app.MapDelete("todos/{id}", Todos.DeleteAsync);
+
 app.Run();
