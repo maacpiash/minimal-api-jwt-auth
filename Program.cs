@@ -22,10 +22,13 @@
  * SOFTWARE.
  */
 using System.Text;
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
@@ -119,6 +122,16 @@ builder.Services.AddAuthorization(options =>
 {
 	options.AddPolicy("admin", policy => policy.RequireAuthenticatedUser().RequireClaim("role", "admin"));
 	options.AddPolicy("user", policy => policy.RequireAuthenticatedUser().RequireClaim("role", "user"));
+	options.AddPolicy("own-profile", policy => policy.RequireAuthenticatedUser().RequireAssertion(context =>
+	{
+		string userIdFromPath = "";
+		if (context.Resource is HttpContext http)
+			userIdFromPath = http.Request.Path.Value.Split('/').Last();
+		else return false;
+		UserClaims.TryValidate(context.User, out var user, out var errMsg);
+		var userIdFromClaims = user.Id.ToString();
+		return userIdFromPath == userIdFromClaims;
+	}));
 });
 
 var app = builder.Build();
@@ -139,5 +152,8 @@ app.MapGet("todos/{id}", Todos.ReadOneAsync);
 app.MapPost("todos", Todos.CreateAsync);
 app.MapPut("todos", Todos.UpdateAsync);
 app.MapDelete("todos/{id}", Todos.DeleteAsync);
+
+app.MapGet("user/{id}", async (AppDbContext db, Guid id) => Results.Ok(await db.Users.FindAsync(id)))
+	.RequireAuthorization("own-profile");
 
 app.Run();
