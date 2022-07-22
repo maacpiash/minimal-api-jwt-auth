@@ -22,13 +22,10 @@
  * SOFTWARE.
  */
 using System.Text;
-using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.OpenApi.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;

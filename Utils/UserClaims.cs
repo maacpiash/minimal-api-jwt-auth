@@ -27,7 +27,6 @@ public static class UserClaims
 {
 	public static bool TryValidate(ClaimsPrincipal claims, out User user, out string ErrorMessage)
 	{
-
 		if (!Guid.TryParse(claims.FindFirstValue("jti"), out var _))
 			ErrorMessage = "Invalid `tokenId`: Not a valid GUID.";
 
