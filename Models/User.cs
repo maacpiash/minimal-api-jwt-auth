@@ -21,7 +21,6 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNetCore.Identity;
 
 public class User : IdentityUser<Guid>

@@ -22,7 +22,6 @@
  * SOFTWARE.
  */
 using Microsoft.AspNetCore.Identity;
-using Microsoft.EntityFrameworkCore;
 using MiniValidation;
 using static Microsoft.AspNetCore.Http.Results;
 
