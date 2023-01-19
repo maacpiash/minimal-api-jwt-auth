@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/MinimalAPIJWTAuth.csproj",
+                "${workspaceFolder}/src/MinApiJwtAuth.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -19,7 +19,7 @@
             "type": "process",
             "args": [
                 "publish",
-                "${workspaceFolder}/MinimalAPIJWTAuth.csproj",
+                "${workspaceFolder}/src/MinApiJwtAuth.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
@@ -33,7 +33,7 @@
                 "watch",
                 "run",
                 "--project",
-                "${workspaceFolder}/MinimalAPIJWTAuth.csproj"
+                "${workspaceFolder}/src/MinApiJwtAuth.csproj"
             ],
             "problemMatcher": "$msCompile"
         }
