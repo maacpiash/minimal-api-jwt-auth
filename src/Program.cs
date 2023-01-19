@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2023 Mohammad Abdul Ahad Chowdhury
+ * Copyright (c) 2022—2023 Mohammad Abdul Ahad Chowdhury
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -79,7 +79,7 @@ builder.Services.AddSwaggerGen(options =>
 builder.Services.AddDbContext<AppDbContext>(
 	optionsBuilder =>
 		optionsBuilder
-			.UseSqlite("Data Source=app.db")
+			.UseSqlite("Data Source=app(1).db")
 			.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
 			.EnableDetailedErrors()
 			.ConfigureWarnings(b => b.Log(ConnectionOpened, CommandExecuted, ConnectionClosed))
@@ -164,6 +164,8 @@ app.UseSwaggerUI();
 
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.MapGet("users", (AppDbContext db) => db.Users.ToList());
 
 app.MapPost("signup", Users.SignUpAsync);
 app.MapPost("signin", Users.SignInAsync);

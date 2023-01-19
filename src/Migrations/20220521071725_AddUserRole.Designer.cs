@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MinApiJwtAuth.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220521071725_AddUserRole")]
+    [Migration("2022—20230521071725_AddUserRole")]
     partial class AddUserRole
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

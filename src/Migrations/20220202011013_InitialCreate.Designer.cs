@@ -10,7 +10,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MinApiJwtAuth.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20220202011013_InitialCreate")]
+    [Migration("2022—20230202011013_InitialCreate")]
     partial class InitialCreate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
