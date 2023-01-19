@@ -2,7 +2,7 @@
 
 #nullable disable
 
-namespace MinimalAPIJWTAuth.Migrations
+namespace MinApiJwtAuth.Migrations
 {
     public partial class AddUserRole : Migration
     {
