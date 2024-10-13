@@ -1,0 +1,6 @@
+@MinApiJwtAuth_HostAddress = http://localhost:5064
+
+GET {{MinApiJwtAuth_HostAddress}}/users/
+Accept: application/json
+
+###
