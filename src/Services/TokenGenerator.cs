@@ -45,17 +45,14 @@ public class TokenGenerator
 	{
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
-			Subject = new ClaimsIdentity(
-				new[]
-				{
-					new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
-					new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-					new Claim(ClaimTypes.NameIdentifier, user.UserName),
-					new Claim(ClaimTypes.Name, user.FullName),
-					new Claim(ClaimTypes.Email, user.Email),
-					new Claim(ClaimTypes.Role, user.Role),
-				}
-			),
+			Subject = new ClaimsIdentity([
+				new Claim(JwtRegisteredClaimNames.Sub, user.Id.ToString()),
+				new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
+				new Claim(ClaimTypes.NameIdentifier, user.UserName),
+				new Claim(ClaimTypes.Name, user.FullName),
+				new Claim(ClaimTypes.Email, user.Email),
+				new Claim(ClaimTypes.Role, user.Role),
+			]),
 			Expires = DateTime.UtcNow.AddMinutes(15),
 			SigningCredentials = new SigningCredentials(
 				new SymmetricSecurityKey(_accessTokenSecret),
@@ -76,7 +73,7 @@ public class TokenGenerator
 		var tokenHandler = new JwtSecurityTokenHandler();
 		var tokenDescriptor = new SecurityTokenDescriptor
 		{
-			Subject = new ClaimsIdentity(new[] { new Claim(JwtRegisteredClaimNames.Jti, tokenId.ToString()), }),
+			Subject = new ClaimsIdentity([new Claim(JwtRegisteredClaimNames.Jti, tokenId.ToString())]),
 			Expires = DateTime.UtcNow.AddDays(1),
 			SigningCredentials = new SigningCredentials(
 				new SymmetricSecurityKey(_refreshTokenSecret),
