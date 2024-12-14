@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Mohammad Abdul Ahad Chowdhury
+ * Copyright (c) 2022—2023 Mohammad Abdul Ahad Chowdhury
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,24 +22,23 @@
  * SOFTWARE.
  */
 using System.ComponentModel.DataAnnotations;
+using Microsoft.EntityFrameworkCore;
 
-public record Todo
+public class TokenRepository : DbContext
+{
+	public DbSet<Token> Tokens { get; set; }
+
+	public TokenRepository(DbContextOptions<TokenRepository> options) : base(options) { }
+
+	protected override void OnModelCreating(ModelBuilder modelBuilder)
+	{
+		modelBuilder.Entity<Token>().HasIndex(b => b.UserId);
+	}
+}
+
+public record Token
 {
 	[Key]
-	public Guid Id { get; set; }
-	public string Title { get; set; }
-	public bool IsDone { get; set; } = false;
-	public Guid AssignedToId { get; set; }
-	public User AssignedTo { get; set; }
-
-	public Todo() { }
-
-	public Todo(Guid id, string title, bool isDone, Guid assignedToId, User assignedTo)
-	{
-		Id = id;
-		Title = title;
-		IsDone = isDone;
-		AssignedToId = assignedToId;
-		AssignedTo = assignedTo;
-	}
+	public Guid Id { get; init; }
+	public Guid UserId { get; init; }
 }

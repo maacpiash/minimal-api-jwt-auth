@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Mohammad Abdul Ahad Chowdhury
+ * Copyright (c) 2022—2023 Mohammad Abdul Ahad Chowdhury
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,18 +21,25 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
-public class AppDbContext : DbContext
+public record Todo
 {
-	public DbSet<User> Users { get; set; }
-	public DbSet<Todo> Todos { get; set; }
+	[Key]
+	public Guid Id { get; set; }
+	public string Title { get; set; }
+	public bool IsDone { get; set; } = false;
+	public Guid AssignedToId { get; set; }
+	public User AssignedTo { get; set; }
 
-	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+	public Todo() { }
 
-	protected override void OnModelCreating(ModelBuilder builder)
+	public Todo(Guid id, string title, bool isDone, Guid assignedToId, User assignedTo)
 	{
-		builder.Entity<User>().HasMany(u => u.Todos).WithOne(t => t.AssignedTo);
-		builder.Entity<Todo>().HasOne(t => t.AssignedTo).WithMany(u => u.Todos);
+		Id = id;
+		Title = title;
+		IsDone = isDone;
+		AssignedToId = assignedToId;
+		AssignedTo = assignedTo;
 	}
 }

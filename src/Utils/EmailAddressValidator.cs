@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Mohammad Abdul Ahad Chowdhury
+ * Copyright (c) 2022—2023 Mohammad Abdul Ahad Chowdhury
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,7 +21,7 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
- // source: https://docs.microsoft.com/en-au/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
+// source: https://docs.microsoft.com/en-au/dotnet/standard/base-types/how-to-verify-that-strings-are-in-valid-email-format
 
 using System.Globalization;
 using System.Text.RegularExpressions;

@@ -1,7 +1,7 @@
 /*
  * MIT License
  *
- * Copyright (c) 2022 Mohammad Abdul Ahad Chowdhury
+ * Copyright (c) 2022—2022—2023 Mohammad Abdul Ahad Chowdhury
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,25 +21,18 @@
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
  */
-using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
-public class User : IdentityUser<Guid>
+public class AppDbContext : DbContext
 {
-	public string FullName { get; set; }
-	public int Age { get; set; }
-	public string Role { get; set; }
-	public string Address { get; set; }
-	public HashSet<Todo> Todos { get; set; }
+	public DbSet<User> Users { get; set; }
+	public DbSet<Todo> Todos { get; set; }
 
-	public User() { }
+	public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
 
-	public User(UserCreateDTO dto)
+	protected override void OnModelCreating(ModelBuilder builder)
 	{
-		FullName = dto.FullName;
-		Email = dto.Email;
-		UserName = dto.Username;
-		Age = dto.Age;
-		Role = dto.Role;
-		Address = dto.Address;
+		builder.Entity<User>().HasMany(u => u.Todos).WithOne(t => t.AssignedTo);
+		builder.Entity<Todo>().HasOne(t => t.AssignedTo).WithMany(u => u.Todos);
 	}
 }
