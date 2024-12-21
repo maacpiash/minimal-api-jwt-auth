@@ -25,7 +25,7 @@ using System.Text;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.OpenApi.Models;
+using Scalar.AspNetCore;
 using Microsoft.AspNetCore.Http.Json;
 using System.Text.Json.Serialization;
 using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
@@ -103,6 +103,7 @@ var app = builder.Build();
 if (app.Environment.IsDevelopment())
 {
     app.MapOpenApi();
+	app.MapScalarApiReference();
     app.UseHttpsRedirection();
 }
 
