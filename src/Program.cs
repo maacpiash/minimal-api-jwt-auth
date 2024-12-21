@@ -32,6 +32,8 @@ using static Microsoft.EntityFrameworkCore.Diagnostics.RelationalEventId;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddOpenApi();
+
 var accessTokenSecret = builder.Configuration["Jwt:AccessTokenSecret"];
 var isProduction = builder.Environment.IsProduction();
 
@@ -41,48 +43,11 @@ builder.Services.Configure<JsonOptions>(options =>
 	options.SerializerOptions.Converters.Add(new UserConverter());
 });
 
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-	options.AddSecurityDefinition(
-		"Bearer",
-		new OpenApiSecurityScheme
-		{
-			Name = "Authorization",
-			Type = SecuritySchemeType.ApiKey,
-			In = ParameterLocation.Header,
-			Scheme = "Bearer",
-			BearerFormat = "JWT",
-			Description =
-				"JWT Authorization header using the Bearer scheme. Example: \"Authorization: Bearer {token}\"",
-		}
-	);
-
-	options.AddSecurityRequirement(
-		new OpenApiSecurityRequirement
-		{
-			{
-				new OpenApiSecurityScheme
-				{
-					Reference = new OpenApiReference
-					{
-						Type = ReferenceType.SecurityScheme,
-						Id = "Bearer"
-					}
-				},
-				new string[] { }
-			}
-		}
-	);
-});
-
-builder.Services.AddDbContext<AppDbContext>(
-	optionsBuilder =>
-		optionsBuilder
-			.UseSqlite("Data Source=app(1).db")
-			.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
-			.EnableDetailedErrors()
-			.ConfigureWarnings(b => b.Log(ConnectionOpened, CommandExecuted, ConnectionClosed))
+builder.Services.AddDbContext<AppDbContext>(optionsBuilder =>
+	optionsBuilder.UseSqlite("Data Source=app.db")
+		.UseLoggerFactory(LoggerFactory.Create(builder => builder.AddConsole()))
+		.EnableDetailedErrors()
+		.ConfigureWarnings(b => b.Log(ConnectionOpened, CommandExecuted, ConnectionClosed))
 );
 
 builder.Services.AddDbContext<TokenRepository>(
@@ -94,8 +59,7 @@ builder.Services.AddSingleton<TokenValidator>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services
-	.AddIdentityCore<User>(options =>
+builder.Services.AddIdentityCore<User>(options =>
 	{
 		options.User.RequireUniqueEmail = true;
 		options.Password.RequireDigit = isProduction;
@@ -110,8 +74,7 @@ builder.Services
 	})
 	.AddEntityFrameworkStores<AppDbContext>();
 
-builder.Services
-	.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(options =>
 	{
 		options.TokenValidationParameters = new TokenValidationParameters
@@ -130,37 +93,18 @@ builder.Services
 
 builder.Services.AddAuthorization(options =>
 {
-	options.AddPolicy(
-		"admin",
-		policy => policy.RequireAuthenticatedUser().RequireClaim("role", "admin")
-	);
-	options.AddPolicy(
-		"user",
-		policy => policy.RequireAuthenticatedUser().RequireClaim("role", "user")
-	);
-	options.AddPolicy(
-		"own-profile",
-		policy =>
-			policy
-				.RequireAuthenticatedUser()
-				.RequireAssertion(context =>
-				{
-					string userIdFromPath = "";
-					if (context.Resource is HttpContext http)
-						userIdFromPath = http.Request.Path.Value.Split('/').Last();
-					else
-						return false;
-					UserClaims.TryValidate(context.User, out var user, out var errMsg);
-					var userIdFromClaims = user.Id.ToString();
-					return userIdFromPath == userIdFromClaims;
-				})
-	);
+	options.AddPolicy("admin",policy => policy.RequireAuthenticatedUser().RequireClaim("role", "admin"));
+	options.AddPolicy("user", policy => policy.RequireAuthenticatedUser().RequireClaim("role", "user"));
 });
 
 var app = builder.Build();
 
-app.UseSwagger();
-app.UseSwaggerUI();
+// Configure the HTTP request pipeline.
+if (app.Environment.IsDevelopment())
+{
+    app.MapOpenApi();
+    app.UseHttpsRedirection();
+}
 
 app.UseAuthentication();
 app.UseAuthorization();
@@ -178,10 +122,6 @@ app.MapPost("todos", Todos.CreateAsync);
 app.MapPut("todos", Todos.UpdateAsync);
 app.MapDelete("todos/{id}", Todos.DeleteAsync);
 
-app.MapGet(
-		"user/{id}",
-		async (AppDbContext db, Guid id) => Results.Ok(await db.Users.FindAsync(id))
-	)
-	.RequireAuthorization("own-profile");
+app.MapGet("user/{id}", async (AppDbContext db, Guid id) => Results.Ok(await db.Users.FindAsync(id)));
 
 app.Run();
